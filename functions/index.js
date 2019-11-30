@@ -3,11 +3,10 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello world!");
-});
+const express = require('express');
+const app = express();
 
-exports.getShouts = functions.https.onRequest((req, res) => {
+app.get('/shouts', (req, res) => {
     admin
     .firestore()
     .collection('shouts')
@@ -20,9 +19,12 @@ exports.getShouts = functions.https.onRequest((req, res) => {
         return res.json(shouts);
     })
     .catch((err) => console.error(err));
-});
+})
 
-exports.createShouts = functions.https.onRequest((req, res) => {
+
+
+app.post('/shouts', (req, res) => {
+    
     const newShouts = {
         body: req.body.body,
         userHandle: req.body.userHandle,
@@ -40,3 +42,5 @@ exports.createShouts = functions.https.onRequest((req, res) => {
         console.error(err);
     })
 });
+
+exports.api = functions.https.onRequest(app);
