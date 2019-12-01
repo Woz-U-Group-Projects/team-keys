@@ -14,7 +14,12 @@ app.get('/shouts', (req, res) => {
     .then((data) => {
         let shouts = [];
         data.forEach((doc) => {
-            shouts.push(doc.data());
+            shouts.push({
+                shoutId: doc.id,
+                body: doc.data().body,
+                userHandle: doc.data().userHandle,
+                createdAt: doc.data().createdAt
+            });
         });
         return res.json(shouts);
     })
